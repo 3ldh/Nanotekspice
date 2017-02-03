@@ -1,0 +1,14 @@
+//
+// Created by sauvau_m on 2/2/17.
+//
+
+#ifndef CPP_NANOTEKSPICE_COMPONENTFACTORY_HPP
+#define CPP_NANOTEKSPICE_COMPONENTFACTORY_HPP
+
+
+class ComponentFactory {
+
+};
+
+
+#endif //CPP_NANOTEKSPICE_COMPONENTFACTORY_HPP
