@@ -45,13 +45,12 @@ nts::t_ast_node *nts::Parser::createTree() {
         } else if (input_char == '.') {
             int peek_character = stream.peek();
             if (peek_character == 'c')
-                createChipsetsNodes(*node);
+                createChipsetsSection(*node);
             else if (peek_character == 'l')
-                createLinksNodes(*node);
+                createLinksSection(*node);
             else if (!stream.eof())
                 throw nts::SyntaxError("SyntaxError : No section define");
         } else if (!stream.eof()) {
-            std::cout << (char) input_char << std::endl;
             throw nts::SyntaxError("SyntaxError : Unknown section");
         }
         tree->children->push_back(node);
@@ -63,7 +62,7 @@ void nts::Parser::dumpStream() const {
     std::cout << stream.str() << std::endl;
 }
 
-void nts::Parser::createChipsetsNodes(t_ast_node &section_node) {
+void nts::Parser::createChipsetsSection(t_ast_node &section_node) {
     int input_char;
     char tmp[11];
     stream.get(tmp, 11);
@@ -75,7 +74,7 @@ void nts::Parser::createChipsetsNodes(t_ast_node &section_node) {
     section_node.value = "chipsets";
     stream.get();
     while (true) {
-        if (stream.peek() != '\n') {
+        if (!stream.eof() && stream.peek() != '\n') {
             t_ast_node *node_component = new t_ast_node(new std::vector<t_ast_node *>());
             std::string str;
             node_component->lexeme = "component";
@@ -92,7 +91,6 @@ void nts::Parser::createChipsetsNodes(t_ast_node &section_node) {
                 } else if (isalnum(input_char))
                     str += input_char;
                 else if (!stream.eof()) {
-                    std::cout << (char) input_char << std::endl;
                     throw nts::SyntaxError("SyntaxError : in Chipset section");
                 }
             }
@@ -101,7 +99,6 @@ void nts::Parser::createChipsetsNodes(t_ast_node &section_node) {
             stream.get();
             section_node.children->push_back(createNewLineNode());
         }
-
         if (stream.eof() || stream.peek() == '.')
             break;
     }
@@ -129,11 +126,11 @@ void nts::Parser::createComponentsNodes(nts::t_ast_node &node_component, std::st
             val += input_char;
         else if (!stream.eof())
             throw nts::SyntaxError(
-                    "SyntaxError : The circuit file includes one or several lexical errors or syntactic errors");
+                    "SyntaxError Chipsets Section : [componentType] [spaces] [componentName] [newLine]");
     }
 }
 
-void nts::Parser::createLinksNodes(t_ast_node &section_node) {
+void nts::Parser::createLinksSection(t_ast_node &section_node) {
     int input_char;
     char tmp[8];
     stream.get(tmp, 8);
@@ -145,25 +142,31 @@ void nts::Parser::createLinksNodes(t_ast_node &section_node) {
     section_node.value = "links";
     stream.get();
     while (true) {
-        t_ast_node *node_link = new t_ast_node(new std::vector<t_ast_node *>());
-        std::string str;
-        node_link->lexeme = "link";
-        node_link->type = ASTNodeType::LINK;
-        while (!stream.eof()) {
-            input_char = stream.get();
-            if (input_char == '\n') {
-                node_link->children->push_back(createNewLineNode());
-                break;
-            } else if (input_char == ' ' || input_char == '\t') {
-                createLinksNodes(*node_link, str);
-                str.clear();
-            } else if (isalnum(input_char) || input_char == ':')
-                str += input_char;
-            else if (!stream.eof())
-                throw nts::SyntaxError(
-                        "SyntaxError : The circuit file includes one or several lexical errors or syntactic errors");
+        if (!stream.eof() && stream.peek() != '\n') {
+            t_ast_node *node_link = new t_ast_node(new std::vector<t_ast_node *>());
+            std::string str;
+            node_link->lexeme = "link";
+            node_link->type = ASTNodeType::LINK;
+            while (!stream.eof()) {
+                input_char = stream.get();
+                if (input_char == '\n') {
+                    node_link->children->push_back(createNewLineNode());
+                    break;
+                } else if (input_char == ' ' || input_char == '\t') {
+                    createLinksNodes(*node_link, str);
+                    str.clear();
+                    break;
+                } else if (isalnum(input_char) || input_char == ':')
+                    str += input_char;
+                else if (!stream.eof())
+                    throw nts::SyntaxError(
+                            "SyntaxError : The circuit file includes one or several lexical errors or syntactic errors");
+            }
+            section_node.children->push_back(node_link);
+        } else {
+            stream.get();
+            section_node.children->push_back(createNewLineNode());
         }
-        section_node.children->push_back(node_link);
         if (stream.eof() || stream.peek() == '.')
             break;
     }
@@ -177,7 +180,11 @@ void nts::Parser::createLinksEndNodes(t_ast_node &node_link, std::string const &
     size_t found_separator = str.find_first_of(":");
     if (found_separator == std::string::npos)
         throw nts::SyntaxError(
-                "SyntaxError : The circuit file includes one or several lexical errors or syntactic errors");
+                "SyntaxError :  - Link - component name and pin value should be separated by a \":\" - " + str);
+    if (!isNumber(str.substr(found_separator + 1, str.size())))
+        throw nts::SyntaxError(
+                "SyntaxError :  - Link - Pin value should be a number instead found : " +
+                str.substr(found_separator + 1, str.size()));
     t_ast_node *component_name_link = new t_ast_node(NULL);
     component_name_link->type = ASTNodeType::STRING;
     component_name_link->lexeme = "component name for link";
@@ -205,7 +212,7 @@ void nts::Parser::createLinksNodes(t_ast_node &node_link, std::string const &str
             second_link_end_str += input_char;
         else if (!stream.eof())
             throw nts::SyntaxError(
-                    "SyntaxError : The circuit file includes one or several lexical errors or syntactic errors");
+                    "SyntaxError Link Section : [componentName]:[pinNumber] [spaces] [componentName]:[pinNumber] [newLine]");
     }
 }
 
@@ -224,18 +231,19 @@ void nts::Parser::parseTree(nts::t_ast_node &root) {
         throw NtsError("Missing chipsets sections");
     if (!links)
         throw NtsError("Missing links sections");
-    checkChipsetsIntegrity(*chipsets);
-
+    checkLinksIntegrity(*chipsets, *links);
+    checkChipsetsIntegrity(*chipsets, *links);
+    checkComponentNameExist(*chipsets, *links);
 }
 
-void nts::Parser::checkChipsetsIntegrity(const nts::t_ast_node &chipsets) const {
+void nts::Parser::checkChipsetsIntegrity(const nts::t_ast_node &chipsets, const nts::t_ast_node &links) const {
     if (chipsets.children) {
         for (int i = 0; i < chipsets.children->size(); ++i) {
-            checkComponentIntegrity(*(*chipsets.children)[i], chipsets);
+            checkComponentIntegrity(*(*chipsets.children)[i], links);
         }
         for (int i = 0; i < chipsets.children->size(); ++i) {
             if ((*chipsets.children)[i]->type == ASTNodeType::COMPONENT) {
-                int count = checkExistingName(chipsets, (*(*chipsets.children)[i]->children)[1]->value);
+                int count = checkNameOccurence(chipsets, (*(*chipsets.children)[i]->children)[1]->value);
                 if (count > 1)
                     throw NtsError(
                             "Error : Component name \"" + (*(*chipsets.children)[i]->children)[1]->value +
@@ -245,21 +253,24 @@ void nts::Parser::checkChipsetsIntegrity(const nts::t_ast_node &chipsets) const 
     }
 }
 
-void nts::Parser::checkComponentIntegrity(nts::t_ast_node const &node, nts::t_ast_node const &chipsets_node) const {
+void nts::Parser::checkComponentIntegrity(nts::t_ast_node const &node, nts::t_ast_node const &linksNode) const {
     if (node.type == ASTNodeType::COMPONENT) {
         if (node.children->size() != 3 || (*node.children)[0]->type != ASTNodeType::STRING
             || (*node.children)[1]->type != ASTNodeType::STRING || (*node.children)[2]->type != ASTNodeType::NEWLINE) {
-            std::cout << node.children->size() << (*node.children)[0]->lexeme << std::endl;
-            throw NtsError("Error : Component integrity compromised check your file.nts. "
-                                   "Syntax : [componentType] [spaces] [componentName] [newLine]");
+            throw NtsError("Error : Component integrity compromised check your file.nts."
+                                   "Chipset section Syntax : [componentType] [spaces] [componentName] [newLine]");
         }
         if ((*node.children)[0]->value == "output") {
-            //TODO check if output is linked
+            int outputLinkCount = checkOutputLink(linksNode, (*node.children)[1]->value);
+            if (outputLinkCount == 0)
+                throw NtsError("Error : Output " + (*node.children)[1]->value + " has not been linked");
+            if (outputLinkCount > 1)
+                throw NtsError("Error : Output " + (*node.children)[1]->value + " has been linked multiple times");
         }
     }
 }
 
-int nts::Parser::checkExistingName(const nts::t_ast_node &node, std::string const &name) const {
+int nts::Parser::checkNameOccurence(const nts::t_ast_node &node, std::string const &name) const {
     int count = 0;
     if (node.children) {
         for (int i = 0; i < node.children->size(); ++i) {
@@ -273,19 +284,63 @@ int nts::Parser::checkExistingName(const nts::t_ast_node &node, std::string cons
     return count;
 }
 
-/*
-void nts::Parser::checkIntegrity(nts::t_ast_node const &root, const nts::t_ast_node *node) const {
-    if (node) {
-        checkComponentIntegrity(root, node);
-//        checkLinkIntegrity(node);
-        if (node->children) {
-            for (int i = 0; i < node->children->size(); ++i) {
-                checkIntegrity(root, (*node->children)[i]);
+int nts::Parser::checkOutputLink(const nts::t_ast_node &linksNode, std::string const &name) const {
+    int count = 0;
+    if (linksNode.children) {
+        for (int i = 0; i < linksNode.children->size(); ++i) {
+            if ((*linksNode.children)[i]->type == ASTNodeType::LINK && (*linksNode.children)[i]->children) {
+
+                t_ast_node *linkEnd = (*(*linksNode.children)[i]->children)[0];
+                std::string tmp = (*linkEnd->children)[0]->value;
+                if (tmp == name)
+                    count++;
+            }
+        }
+    }
+    return count;
+}
+
+void nts::Parser::checkLinksIntegrity(const nts::t_ast_node &chipsetsNode, const nts::t_ast_node &linksNode) const {
+    if (linksNode.children) {
+        for (int i = 0; i < linksNode.children->size(); ++i) {
+            if ((*linksNode.children)[i]->type == ASTNodeType::LINK) {
+                if ((*linksNode.children)[i]->children->size() != 3 ||
+                    (*(*linksNode.children)[i]->children)[0]->type != ASTNodeType::LINK_END ||
+                    (*(*linksNode.children)[i]->children)[1]->type != ASTNodeType::LINK_END ||
+                    (*(*linksNode.children)[i]->children)[2]->type != ASTNodeType::NEWLINE) {
+                    throw NtsError("Error : Links integrity compromised check your file.nts."
+                                           "Link Section section: [componentName]:[pinNumber] [spaces] [componentName]:[pinNumber] [newLine]");
+
+                }
+                checkLinkEndIntegrity(*(*(*linksNode.children)[i]->children)[0]);
+                checkLinkEndIntegrity(*(*(*linksNode.children)[i]->children)[1]);
             }
         }
     }
 }
-*/
+
+void nts::Parser::checkLinkEndIntegrity(const nts::t_ast_node &linkEndNode) const {
+    if (linkEndNode.children->size() != 2 || (*linkEndNode.children)[0]->type != ASTNodeType::STRING
+        || (*linkEndNode.children)[1]->type != ASTNodeType::STRING)
+        throw NtsError("Error : Links integrity compromised check your file.nts."
+                               "Link Section section: [componentName]:[pinNumber] [spaces] [componentName]:[pinNumber] [newLine]");
+
+}
+
+void nts::Parser::checkComponentNameExist(const nts::t_ast_node &chipsetsNode, const nts::t_ast_node &linksNode) const {
+    if (linksNode.children) {
+        for (int i = 0; i < linksNode.children->size(); ++i) {
+            if ((*linksNode.children)[i]->type == ASTNodeType::LINK) {
+                int count1 = checkNameOccurence(chipsetsNode, (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value);
+                int count2 = checkNameOccurence(chipsetsNode, (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value);
+                if (count1 == 0)
+                    throw NtsError("Error link section : Can't find component named \"" + (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value + "\"");
+                if (count2 == 0)
+                    throw NtsError("Error link section : Can't find component named \"" + (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value + "\"");
+            }
+        }
+    }
+}
 
 nts::t_ast_node *nts::Parser::findSection(t_ast_node const &root, std::string const &section) const {
     if (root.children) {
@@ -295,4 +350,10 @@ nts::t_ast_node *nts::Parser::findSection(t_ast_node const &root, std::string co
         }
     }
     return (NULL);
+}
+
+bool nts::Parser::isNumber(const std::string &s) {
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
 }
