@@ -5,6 +5,7 @@
 #ifndef CPP_NANOTEKSPICE_ICOMPONENT_HPP
 #define CPP_NANOTEKSPICE_ICOMPONENT_HPP
 
+#include <cstddef>
 
 namespace nts {
     enum Tristate {

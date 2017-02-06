@@ -6,9 +6,12 @@
 #define CPP_NANOTEKSPICE_PARSER_H
 
 #include <sstream>
+#include <map>
 #include "IParser.hpp"
+#include "IComponent.hpp"
 
 namespace nts {
+    class Circuit;
     class Parser : public nts::IParser {
         std::stringstream stream;
 
@@ -27,15 +30,14 @@ namespace nts {
         t_ast_node *findSection(t_ast_node const &root, std::string const &section) const;
         t_ast_node *createNewLineNode();
         bool isNumber(std::string const&);
-
     public:
         Parser(std::vector< std::pair<std::string const&, std::string const&> > inputValue);
         virtual ~Parser();
         virtual void feed(std::string const &input);
         virtual void parseTree(t_ast_node &root);
         virtual nts::t_ast_node *createTree();
-        void checkIntegrity(t_ast_node const &root, t_ast_node const *node) const;
         void dumpStream() const;
+        void createComponents(t_ast_node const &node, Circuit &circuit);
     };
 }
 

@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <iterator>
 #include <Exception.hpp>
+#include <ComponentFactory.hpp>
+#include <Circuit.hpp>
 #include "Parser.hpp"
 
 nts::Parser::~Parser() {
@@ -331,12 +333,16 @@ void nts::Parser::checkComponentNameExist(const nts::t_ast_node &chipsetsNode, c
     if (linksNode.children) {
         for (int i = 0; i < linksNode.children->size(); ++i) {
             if ((*linksNode.children)[i]->type == ASTNodeType::LINK) {
-                int count1 = checkNameOccurence(chipsetsNode, (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value);
-                int count2 = checkNameOccurence(chipsetsNode, (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value);
+                int count1 = checkNameOccurence(chipsetsNode,
+                                                (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value);
+                int count2 = checkNameOccurence(chipsetsNode,
+                                                (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value);
                 if (count1 == 0)
-                    throw NtsError("Error link section : Can't find component named \"" + (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value + "\"");
+                    throw NtsError("Error link section : Can't find component named \"" +
+                                   (*(*(*linksNode.children)[0]->children)[0]->children)[0]->value + "\"");
                 if (count2 == 0)
-                    throw NtsError("Error link section : Can't find component named \"" + (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value + "\"");
+                    throw NtsError("Error link section : Can't find component named \"" +
+                                   (*(*(*linksNode.children)[0]->children)[1]->children)[0]->value + "\"");
             }
         }
     }
@@ -356,4 +362,44 @@ bool nts::Parser::isNumber(const std::string &s) {
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
+}
+
+void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
+    ComponentFactory factory;
+
+    if (node.type == ASTNodeType::COMPONENT) {
+        IComponent *cmpnt = factory.createComponent((*node.children)[0]->value, (*node.children)[1]->value);
+
+        circuit.getComponents().insert(std::make_pair((*node.children)[1]->value, cmpnt));
+        //TODO uncomment when factory implement all component
+        /*if (!cmpnt)
+            throw NtsError("Error : \"" + (*node.children)[0]->value + "\" is not a component");
+*/
+        if ((*node.children)[0]->value == "output")
+            circuit.getOutputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Output *>(cmpnt)));
+        else if ((*node.children)[0]->value == "input")
+            circuit.getInputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Input *>(cmpnt)));
+        else if ((*node.children)[0]->value == "clocks")
+            circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
+        else if ((*node.children)[0]->value == "false")
+            circuit.getFalses().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<False *>(cmpnt)));
+        else if ((*node.children)[0]->value == "true")
+            circuit.getTrues().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<True *>(cmpnt)));
+    } else if (node.type == ASTNodeType::LINK) {
+        if (circuit.getComponents().find((*(*node.children)[0]->children)[0]->value) == circuit.getComponents().end())
+            throw NtsError("Error link section : Can't find component named \"" +
+                                   (*(*node.children)[0]->children)[0]->value + "\"");
+        if (circuit.getComponents().find((*(*node.children)[1]->children)[0]->value) == circuit.getComponents().end())
+            throw NtsError("Error link section : Can't find component named \"" +
+                                   (*(*node.children)[1]->children)[0]->value + "\"");
+        circuit.getComponents()[(*(*node.children)[0]->children)[0]->value]->SetLink(
+                static_cast<size_t >(std::stoi((*(*node.children)[0]->children)[1]->value)),
+                *circuit.getComponents()[(*(*node.children)[1]->children)[0]->value],
+                static_cast<size_t >(std::stoi((*(*node.children)[1]->children)[1]->value)));
+    }
+    if (node.children) {
+        for (int i = 0; i < node.children->size(); ++i) {
+            createComponents(*(*node.children)[i], circuit);
+        }
+    }
 }

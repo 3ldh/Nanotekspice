@@ -1,9 +1,10 @@
 #include <iostream>
 #include <Nanotekspice.hpp>
+#include "ComponentFactory.hpp"
+
 
 int main(int ac, char const * const * const argv) {
     nts::Nanotekspice *nano;
-
     if (ac < 2) {
         std::cout << "Usage : ./Nanotekspice [filename.nts] [[input=value] [...]]" << std::endl;
         return (0);
