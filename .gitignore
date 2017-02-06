@@ -87,3 +87,6 @@ fabric.properties
 .idea/
 CMakeLists.txt
 cmake-build-debug/
+Advanced/
+Basics/
+Primitives/
