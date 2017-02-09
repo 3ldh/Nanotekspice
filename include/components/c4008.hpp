@@ -12,7 +12,6 @@ namespace nts {
 
         Tristate computeOuputOrCarryOut(size_t pin_num_this, bool computeCarry) const;
         Tristate computeCarryOut(size_t pin_num_this) const;
-        Tristate computeInput(size_t pin_num_this) const;
         Tristate computeOutput(size_t pin_num_this) const;
 
     public:

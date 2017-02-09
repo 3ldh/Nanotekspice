@@ -9,7 +9,9 @@ nts::False::~False() {
 
 }
 
-nts::False::False() : ASpecialComponent(FALSE) {}
+nts::False::False(std::string const &name) : ASpecialComponent(name) {
+    value = FALSE;
+}
 
 void nts::False::Dump(void) const {
     ASpecialComponent::Dump("False");

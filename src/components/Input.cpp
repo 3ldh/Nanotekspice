@@ -10,7 +10,7 @@ nts::Input::~Input() {
 
 }
 
-nts::Input::Input(nts::Tristate value) : ASpecialComponent(value) {
+nts::Input::Input(std::string const &name) : ASpecialComponent(name) {
 
 }
 

@@ -9,7 +9,9 @@ nts::True::~True() {
 
 }
 
-nts::True::True() : ASpecialComponent(TRUE) {}
+nts::True::True(std::string const &name) : ASpecialComponent(name) {
+    value = TRUE;
+}
 
 void nts::True::Dump(void) const {
     ASpecialComponent::Dump("True");

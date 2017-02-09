@@ -9,7 +9,7 @@ nts::Clock::~Clock() {
 
 }
 
-nts::Clock::Clock(nts::Tristate state) : ASpecialComponent(state) {}
+nts::Clock::Clock(std::string const &name) : ASpecialComponent(name) {}
 
 void nts::Clock::Dump(void) const {
     ASpecialComponent::Dump("Clock");

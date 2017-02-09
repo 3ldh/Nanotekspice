@@ -11,7 +11,7 @@ namespace nts {
     class Clock : public ASpecialComponent {
     public:
         virtual ~Clock();
-        Clock(Tristate state);
+        Clock(std::string const &name);
         void Dump(void) const;
         void inverse();
     };

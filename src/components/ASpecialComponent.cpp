@@ -11,7 +11,8 @@ nts::ASpecialComponent::~ASpecialComponent() {
 
 }
 
-nts::ASpecialComponent::ASpecialComponent(Tristate state) : value(state) {
+nts::ASpecialComponent::ASpecialComponent(std::string const &name) : name(name) {
+    value = UNDEFINED;
     pin[0] = NULL;
     link.first = 0;
     link.second = 0;
@@ -36,6 +37,10 @@ void nts::ASpecialComponent::SetLink(size_t pin_num_this, nts::IComponent &compo
 }
 
 void nts::ASpecialComponent::Dump(std::string const &componentType) const {
-    std::cout << "Component - "<< componentType << " : " << value << std::endl;
+    std::cout << "Component - "<< componentType << "<" + name + "> : " << value << std::endl;
     std::cout << "\tpin #1: " << ((pin[0]) ? "linked" : "NULL") << std::endl;
+}
+
+void nts::ASpecialComponent::setName(const std::string &name) {
+    ASpecialComponent::name = name;
 }

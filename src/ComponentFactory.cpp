@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <components/c4008.hpp>
+#include <components/c4081.hpp>
 #include "ComponentFactory.hpp"
 
 nts::ComponentFactory::~ComponentFactory() {
@@ -17,6 +18,7 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["true"] = std::bind(&ComponentFactory::createTrue, this, std::placeholders::_1);
     mapPtr["clock"] = std::bind(&ComponentFactory::createClock, this, std::placeholders::_1);
     mapPtr["4008"] = std::bind(&ComponentFactory::create4008, this, std::placeholders::_1);
+    mapPtr["4081"] = std::bind(&ComponentFactory::create4081, this, std::placeholders::_1);
 }
 
 nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &value) {
@@ -27,36 +29,38 @@ nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &
     return UNDEFINED;
 }
 
-nts::IComponent *nts::ComponentFactory::createComponent(const std::string &type, const std::string &value) {
+nts::IComponent *nts::ComponentFactory::createComponent(const std::string &type, const std::string &name) {
     if (mapPtr.find(type) == mapPtr.end())
         return NULL;
-    return mapPtr[type](value);
+    return mapPtr[type](name);
 }
 
-nts::IComponent *nts::ComponentFactory::createInput(const std::string &value) const {
-    return new Input(convertStringToTristate(value));
+nts::IComponent *nts::ComponentFactory::createInput(const std::string &name) const {
+    return new Input(name);
 }
 
-nts::IComponent *nts::ComponentFactory::createOutput(const std::string &value) const {
-    (void)value;
-    return new Output();
+nts::IComponent *nts::ComponentFactory::createOutput(const std::string &name) const {
+    return new Output(name);
 }
 
-nts::IComponent *nts::ComponentFactory::createClock(const std::string &value) const {
-    return new Clock(convertStringToTristate(value));
+nts::IComponent *nts::ComponentFactory::createClock(const std::string &name) const {
+    return new Clock(name);
 }
 
-nts::IComponent *nts::ComponentFactory::createFalse(const std::string &value) const {
-    (void)value;
-    return new False();
+nts::IComponent *nts::ComponentFactory::createFalse(const std::string &name) const {
+    return new False(name);
 }
 
-nts::IComponent *nts::ComponentFactory::createTrue(const std::string &value) const {
-    (void)value;
-    return new True();
+nts::IComponent *nts::ComponentFactory::createTrue(const std::string &name) const {
+    return new True(name);
 }
 
 nts::IComponent *nts::ComponentFactory::create4008(const std::string &value) const {
     (void)value;
     return new c4008();
+}
+
+nts::IComponent *nts::ComponentFactory::create4081(const std::string &value) const {
+    (void)value;
+    return new c4081();
 }

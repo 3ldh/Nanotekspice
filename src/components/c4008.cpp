@@ -35,7 +35,7 @@ nts::c4008::c4008() : AComponent(16) {
     pinComputeFunction[11] = std::bind(&c4008::computeOutput, this, 11);
     pinComputeFunction[12] = std::bind(&c4008::computeOutput, this, 12);
     pinComputeFunction[13] = std::bind(&c4008::computeOutput, this, 13);
-
+    //output link with inputs
     mapPinOutputs[10] = std::make_pair(6, 7);
     mapPinOutputs[11] = std::make_pair(4, 5);
     mapPinOutputs[12] = std::make_pair(2, 3);
@@ -46,28 +46,20 @@ void nts::c4008::Dump(void) const {
     AComponent::Dump("Chipset 4008 : ");
 }
 
-nts::Tristate nts::c4008::computeInput(size_t pin_num_this) const {
-    if (!pin[pin_num_this - 1])
-        return UNDEFINED;
-    if (dynamic_cast<Output *>(pin[pin_num_this - 1]))
-        throw PinError("PinError : Invalid use of Output as Input");
-    return pin[pin_num_this - 1]->Compute(link.at(pin_num_this));
-}
-
 nts::Tristate nts::c4008::computeOuputOrCarryOut(size_t pin_num_this, bool computeCarry = false) const {
     Tristate result = UNDEFINED;
     Tristate carry = FALSE;
 
-    if (pin_num_this != 14 && mapPinOutputs.find(pin_num_this) == mapPinOutputs.end())
+    if (!computeCarry && mapPinOutputs.find(pin_num_this) == mapPinOutputs.end())
         return UNDEFINED;
     if (pin[9 - 1])
         carry = pin[9 - 1]->Compute(link.at(9));
     for (size_t i = 10; i <= pin_num_this; ++i) {
         if (mapPinOutputs.find(i) != mapPinOutputs.end()) {
-            size_t o1 = mapPinOutputs.at(i).first;
-            size_t o2 = mapPinOutputs.at(i).second;
-            int tmp = static_cast<int>(pin[o1 - 1]->Compute(link.at(o1))) +
-                      static_cast<int>(pin[o2 - 1]->Compute(link.at(o2))) +
+            size_t i1 = mapPinOutputs.at(i).first;
+            size_t i2 = mapPinOutputs.at(i).second;
+            int tmp = static_cast<int>(pin[i1 - 1]->Compute(link.at(i1))) +
+                      static_cast<int>(pin[i2 - 1]->Compute(link.at(i2))) +
                       static_cast<int>(carry);
             carry = static_cast<Tristate>(tmp >> 1);
             result = static_cast<Tristate>(tmp & 1);

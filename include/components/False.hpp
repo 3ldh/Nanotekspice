@@ -11,7 +11,7 @@ namespace nts {
     class False : public ASpecialComponent {
     public:
         virtual ~False();
-        False();
+        False(std::string const &name);
         void Dump(void) const;
     };
 }

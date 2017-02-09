@@ -10,13 +10,13 @@ nts::Output::~Output() {
 
 }
 
-nts::Output::Output() : ASpecialComponent(UNDEFINED) {}
+nts::Output::Output(std::string const &name) : ASpecialComponent(name) {}
 
 nts::Tristate nts::Output::Compute(size_t pin_num_this) {
     if (pin_num_this != 1)
         throw nts::PinError("PinError : Pin " + std::to_string(pin_num_this) + " does not exist");
     if (!pin[0])
-        throw nts::LinkError("Link error : output is not linked");
+        throw nts::LinkError("Link error : output \""+ name +"\" is not linked");
     value = pin[0]->Compute(link.second);
     return value;
 }

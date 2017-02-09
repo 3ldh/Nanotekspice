@@ -11,7 +11,7 @@ namespace nts {
     class Output : public ASpecialComponent {
     public:
         virtual ~Output();
-        Output();
+        Output(std::string const &name);
         Tristate Compute(size_t pin_num_this);
 
         void Dump(void) const override;

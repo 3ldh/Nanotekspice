@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <Exception.hpp>
+#include <components/Output.hpp>
 #include "components/AComponent.hpp"
 
 nts::AComponent::~AComponent() {
@@ -24,6 +25,14 @@ nts::Tristate nts::AComponent::Compute(size_t pin_num_this) {
     if (pinComputeFunction.find(pin_num_this) == pinComputeFunction.end())
         throw nts::PinError("PinError : Pin " + std::to_string(pin_num_this) + " does not exist");
     return pinComputeFunction[pin_num_this](pin_num_this);
+}
+
+nts::Tristate nts::AComponent::computeInput(size_t pin_num_this) const {
+    if (!pin[pin_num_this - 1])
+        return UNDEFINED;
+    if (dynamic_cast<Output *>(pin[pin_num_this - 1]))
+        throw PinError("PinError : Invalid use of Output as Input");
+    return pin[pin_num_this - 1]->Compute(link.at(pin_num_this));
 }
 
 void nts::AComponent::SetLink(size_t pin_num_this, nts::IComponent &component, size_t pin_num_target) {

@@ -8,18 +8,21 @@
 #include <IComponent.hpp>
 
 namespace nts {
-    class ASpecialComponent : public IComponent{
+    class ASpecialComponent : public IComponent {
     protected:
+        std::string name;
         Tristate value;
         IComponent *pin[1];
         std::pair<size_t, size_t> link;
 
     public:
         virtual ~ASpecialComponent();
-        ASpecialComponent(Tristate state);
+        ASpecialComponent(std::string const &name);
         virtual Tristate Compute(size_t pin_num_this);
         virtual void SetLink(size_t pin_num_this, nts::IComponent &component, size_t pin_num_target);
         void Dump(std::string const &componentType) const;
+
+        void setName(const std::string &name);
     };
 }
 

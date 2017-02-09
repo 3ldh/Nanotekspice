@@ -11,7 +11,7 @@ namespace nts {
     class Input : public nts::ASpecialComponent {
     public:
         virtual ~Input();
-        Input(Tristate value);
+        Input(std::string const &name);
         void Dump(void) const;
         void setValue(Tristate value);
     };

@@ -17,7 +17,7 @@ namespace nts {
         std::map<size_t, std::function<Tristate(size_t)> > pinComputeFunction;
         std::map<size_t, std::pair<size_t, size_t> > mapPinOutputs;
         std::map<size_t, size_t> link;
-        virtual Tristate computeInput(size_t pin_num_this) const = 0;
+        virtual Tristate computeInput(size_t pin_num_this) const;
         virtual Tristate computeOutput(size_t pin_num_this) const = 0;
         virtual Tristate computeVDD(size_t pin_num_this) const;
         virtual Tristate computeVSS(size_t pin_num_this) const;
