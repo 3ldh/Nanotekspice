@@ -22,6 +22,7 @@ namespace nts {
         IComponent *createClock(const std::string &value) const;
         IComponent *createFalse(const std::string &value) const;
         IComponent *createTrue(const std::string &value) const;
+        IComponent *create4008(const std::string &value) const;
     public:
         virtual ~ComponentFactory();
         ComponentFactory();

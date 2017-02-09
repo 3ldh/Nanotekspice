@@ -14,7 +14,7 @@ nts::Circuit::~Circuit() {
 }
 
 nts::Circuit::Circuit(const std::string &file,
-                      std::vector<std::pair<std::string const &, std::string const &> > inputValue) {
+                      std::map<std::string, std::string> inputValue) {
 
     size_t found = file.find_last_of(".");
     if (found == std::string::npos || file.substr(found, file.size()) != ".nts")

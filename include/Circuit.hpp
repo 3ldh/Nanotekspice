@@ -27,7 +27,7 @@ namespace nts {
 
     public:
         virtual ~Circuit();
-        Circuit(const std::string &file, std::vector<std::pair<std::string const&, std::string const&> > inputValue);
+        Circuit(const std::string &file, std::map<std::string, std::string> inputValue);
         void dumpTree(t_ast_node *node) const;
         void updateInput(std::string const &inputName, std::string const &inputValue);
         void display();

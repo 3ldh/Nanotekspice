@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <components/c4008.hpp>
 #include "ComponentFactory.hpp"
 
 nts::ComponentFactory::~ComponentFactory() {
@@ -15,6 +16,7 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["false"] = std::bind(&ComponentFactory::createFalse, this, std::placeholders::_1);
     mapPtr["true"] = std::bind(&ComponentFactory::createTrue, this, std::placeholders::_1);
     mapPtr["clock"] = std::bind(&ComponentFactory::createClock, this, std::placeholders::_1);
+    mapPtr["4008"] = std::bind(&ComponentFactory::create4008, this, std::placeholders::_1);
 }
 
 nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &value) {
@@ -52,4 +54,9 @@ nts::IComponent *nts::ComponentFactory::createFalse(const std::string &value) co
 nts::IComponent *nts::ComponentFactory::createTrue(const std::string &value) const {
     (void)value;
     return new True();
+}
+
+nts::IComponent *nts::ComponentFactory::create4008(const std::string &value) const {
+    (void)value;
+    return new c4008();
 }

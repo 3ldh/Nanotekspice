@@ -15,7 +15,7 @@ nts::Nanotekspice::~Nanotekspice() {
 
 nts::Nanotekspice::Nanotekspice(std::string const &filename, int ac, char const *const *const av) : mainLooper(true) {
 
-    std::vector<std::pair<std::string const &, std::string const &> > inputValue;
+    std::map<std::string, std::string> inputValue;
 
     for (int i = 0; i < ac; ++i) {
         std::string arg(av[i]);
@@ -24,7 +24,7 @@ nts::Nanotekspice::Nanotekspice(std::string const &filename, int ac, char const 
             std::string value = arg.substr(found + 1, arg.size());
             if (value != "0" && value != "1")
                 throw nts::SyntaxError("Input value must be equal to 0 or 1");
-            inputValue.push_back(std::make_pair(arg.substr(0, found), value));
+            inputValue[arg.substr(0, found)] = value;
         }
     }
     commmands["exit"] = std::bind(&Nanotekspice::exit, this);

@@ -15,7 +15,7 @@ int main(int ac, char const * const * const argv) {
         delete(nano);
     }
     catch (nts::NtsError const &err) {
-        std::cout << err.what() << std::endl;
+        std::cerr << err.what() << std::endl;
     }
     return (0);
 }

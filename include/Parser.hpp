@@ -14,6 +14,7 @@ namespace nts {
     class Circuit;
     class Parser : public nts::IParser {
         std::stringstream stream;
+        std::map<std::string, std::string> inputValue;
 
         void createChipsetsSection(t_ast_node &node);
         void createLinksSection(t_ast_node &node);
@@ -31,7 +32,7 @@ namespace nts {
         t_ast_node *createNewLineNode();
         bool isNumber(std::string const&);
     public:
-        Parser(std::vector< std::pair<std::string const&, std::string const&> > inputValue);
+        Parser(std::map<std::string, std::string> inputValue);
         virtual ~Parser();
         virtual void feed(std::string const &input);
         virtual void parseTree(t_ast_node &root);

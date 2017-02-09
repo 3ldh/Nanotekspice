@@ -15,7 +15,7 @@ nts::Parser::~Parser() {
 }
 
 
-nts::Parser::Parser(std::vector<std::pair<std::string const &, std::string const &>> inputValue) {
+nts::Parser::Parser(std::map<std::string, std::string> inputValue) : inputValue(inputValue) {
 
 }
 
@@ -235,7 +235,8 @@ void nts::Parser::parseTree(nts::t_ast_node &root) {
         throw NtsError("Missing links sections");
     checkLinksIntegrity(*chipsets, *links);
     checkChipsetsIntegrity(*chipsets, *links);
-    checkComponentNameExist(*chipsets, *links);
+//    checkComponentNameExist(*chipsets, *links);
+    //TODO check if linking same pin twice
 }
 
 void nts::Parser::checkChipsetsIntegrity(const nts::t_ast_node &chipsets, const nts::t_ast_node &links) const {
@@ -328,7 +329,7 @@ void nts::Parser::checkLinkEndIntegrity(const nts::t_ast_node &linkEndNode) cons
                                "Link Section section: [componentName]:[pinNumber] [spaces] [componentName]:[pinNumber] [newLine]");
 
 }
-
+/*
 void nts::Parser::checkComponentNameExist(const nts::t_ast_node &chipsetsNode, const nts::t_ast_node &linksNode) const {
     if (linksNode.children) {
         for (int i = 0; i < linksNode.children->size(); ++i) {
@@ -346,7 +347,7 @@ void nts::Parser::checkComponentNameExist(const nts::t_ast_node &chipsetsNode, c
             }
         }
     }
-}
+}*/
 
 nts::t_ast_node *nts::Parser::findSection(t_ast_node const &root, std::string const &section) const {
     if (root.children) {
@@ -371,15 +372,19 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
         IComponent *cmpnt = factory.createComponent((*node.children)[0]->value, (*node.children)[1]->value);
 
         circuit.getComponents().insert(std::make_pair((*node.children)[1]->value, cmpnt));
-        //TODO uncomment when factory implement all component
+        //TODO uncomment when factory implement all components
         /*if (!cmpnt)
             throw NtsError("Error : \"" + (*node.children)[0]->value + "\" is not a component");
 */
         if ((*node.children)[0]->value == "output")
             circuit.getOutputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Output *>(cmpnt)));
-        else if ((*node.children)[0]->value == "input")
+        else if ((*node.children)[0]->value == "input") {
             circuit.getInputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Input *>(cmpnt)));
-        else if ((*node.children)[0]->value == "clocks")
+            if (inputValue.find((*node.children)[1]->value) == inputValue.end())
+                throw NtsError("Error : Input value for \"" + (*node.children)[1]->value +"\" is not initalized");
+            dynamic_cast<Input *>(cmpnt)->setValue(static_cast<Tristate>(std::stoi(inputValue[(*node.children)[1]->value])));
+        }
+        else if ((*node.children)[0]->value == "clock")
             circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
         else if ((*node.children)[0]->value == "false")
             circuit.getFalses().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<False *>(cmpnt)));
