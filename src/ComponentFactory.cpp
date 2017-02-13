@@ -5,6 +5,7 @@
 #include <iostream>
 #include <components/c4008.hpp>
 #include <components/c4081.hpp>
+#include <components/c4001.hpp>
 #include "ComponentFactory.hpp"
 
 nts::ComponentFactory::~ComponentFactory() {
@@ -19,6 +20,7 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["clock"] = std::bind(&ComponentFactory::createClock, this, std::placeholders::_1);
     mapPtr["4008"] = std::bind(&ComponentFactory::create4008, this, std::placeholders::_1);
     mapPtr["4081"] = std::bind(&ComponentFactory::create4081, this, std::placeholders::_1);
+    mapPtr["4001"] = std::bind(&ComponentFactory::create4001, this, std::placeholders::_1);
 }
 
 nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &value) {
@@ -63,4 +65,9 @@ nts::IComponent *nts::ComponentFactory::create4008(const std::string &value) con
 nts::IComponent *nts::ComponentFactory::create4081(const std::string &value) const {
     (void)value;
     return new c4081();
+}
+
+nts::IComponent *nts::ComponentFactory::create4001(const std::string &value) const {
+    (void)value;
+    return new c4001();
 }

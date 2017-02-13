@@ -46,7 +46,7 @@ nts::Tristate nts::c4081::computeOutput(size_t pin_num_this) const {
         return UNDEFINED;
     i1 = mapPinOutputs.at(pin_num_this).first;
     i2 = mapPinOutputs.at(pin_num_this).second;
-    result = static_cast<Tristate>(pin[i1 - 1]->Compute(link.at(i1)) && pin[i2 - 1]->Compute(link.at(i2)));
+    result = static_cast<Tristate>(pin.at(i1)->Compute(link.at(i1)) && pin.at(i2)->Compute(link.at(i2)));
     return result;
 }
 

@@ -24,6 +24,7 @@ namespace nts {
         IComponent *createTrue(const std::string &value) const;
         IComponent *create4008(const std::string &value) const;
         IComponent *create4081(const std::string &value) const;
+        IComponent *create4001(const std::string &value) const;
     public:
         virtual ~ComponentFactory();
         ComponentFactory();

@@ -52,14 +52,14 @@ nts::Tristate nts::c4008::computeOuputOrCarryOut(size_t pin_num_this, bool compu
 
     if (!computeCarry && mapPinOutputs.find(pin_num_this) == mapPinOutputs.end())
         return UNDEFINED;
-    if (pin[9 - 1])
-        carry = pin[9 - 1]->Compute(link.at(9));
+    if (pin.at(9))
+        carry = pin.at(9)->Compute(link.at(9));
     for (size_t i = 10; i <= pin_num_this; ++i) {
         if (mapPinOutputs.find(i) != mapPinOutputs.end()) {
             size_t i1 = mapPinOutputs.at(i).first;
             size_t i2 = mapPinOutputs.at(i).second;
-            int tmp = static_cast<int>(pin[i1 - 1]->Compute(link.at(i1))) +
-                      static_cast<int>(pin[i2 - 1]->Compute(link.at(i2))) +
+            int tmp = static_cast<int>(pin.at(i1)->Compute(link.at(i1))) +
+                      static_cast<int>(pin.at(i2)->Compute(link.at(i2))) +
                       static_cast<int>(carry);
             carry = static_cast<Tristate>(tmp >> 1);
             result = static_cast<Tristate>(tmp & 1);

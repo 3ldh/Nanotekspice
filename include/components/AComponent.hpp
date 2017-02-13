@@ -13,7 +13,7 @@ namespace nts {
     class AComponent : public IComponent {
         int numberOfPin;
     protected:
-        IComponent **pin;
+        std::map<size_t, IComponent *> pin;
         std::map<size_t, std::function<Tristate(size_t)> > pinComputeFunction;
         std::map<size_t, std::pair<size_t, size_t> > mapPinOutputs;
         std::map<size_t, size_t> link;

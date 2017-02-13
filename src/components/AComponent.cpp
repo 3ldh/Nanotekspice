@@ -8,16 +8,10 @@
 #include "components/AComponent.hpp"
 
 nts::AComponent::~AComponent() {
-    for (int i = 0; i < numberOfPin; ++i) {
-        if (pin[i])
-            delete(pin[i]);
-    }
-    delete [] pin;
 }
 
 nts::AComponent::AComponent(int numberOfPin) : numberOfPin(numberOfPin) {
-    pin = new IComponent*[numberOfPin];
-    for (int i = 0; i < numberOfPin; ++i)
+    for (int i = 1; i <= numberOfPin; ++i)
         pin[i] = NULL;
 }
 
@@ -28,21 +22,21 @@ nts::Tristate nts::AComponent::Compute(size_t pin_num_this) {
 }
 
 nts::Tristate nts::AComponent::computeInput(size_t pin_num_this) const {
-    if (!pin[pin_num_this - 1])
+    if (!pin.at(pin_num_this))
         return UNDEFINED;
-    if (dynamic_cast<Output *>(pin[pin_num_this - 1]))
+    if (dynamic_cast<Output *>(pin.at(pin_num_this)))
         throw PinError("PinError : Invalid use of Output as Input");
-    return pin[pin_num_this - 1]->Compute(link.at(pin_num_this));
+    return pin.at(pin_num_this)->Compute(link.at(pin_num_this));
 }
 
 void nts::AComponent::SetLink(size_t pin_num_this, nts::IComponent &component, size_t pin_num_target) {
-    if (pin_num_this > numberOfPin || pin_num_this == 0)
+    if (pin.find(pin_num_this) == pin.end())
         throw nts::PinError("PinError : Pin " + std::to_string(pin_num_this) + " does not exist");
-    if (!pin[pin_num_this - 1]) {
+    if (!pin[pin_num_this]) {
         link[pin_num_this] = pin_num_target;
-        pin[pin_num_this - 1] = &component;
-        if (pin[pin_num_this - 1]) {
-            pin[pin_num_this - 1]->SetLink(pin_num_target, *this, pin_num_this);
+        pin[pin_num_this] = &component;
+        if (pin[pin_num_this]) {
+            pin[pin_num_this]->SetLink(pin_num_target, *this, pin_num_this);
         }
     }
 }
@@ -61,8 +55,8 @@ nts::Tristate nts::AComponent::computeVSS(size_t pin_num_this) const {
 
 void nts::AComponent::Dump(std::string const &str) const {
     std::cout << str << std::endl;
-    for (size_t i = 0; i < numberOfPin; ++i) {
-        std::cout << "\tpin #" << i + 1 << " : " << ((pin[i]) ? std::to_string(pin[i]->Compute(link.at(i + 1))) : "NULL")
+    for (size_t i = 1; i <= numberOfPin; ++i) {
+        std::cout << "\tpin #" << i << " : " << ((pin.at(i)) ? std::to_string(pin.at(i)->Compute(link.at(i))) : "NULL")
                   << std::endl;
     }
 }
