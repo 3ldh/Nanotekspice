@@ -6,6 +6,9 @@
 #include <components/c4008.hpp>
 #include <components/c4081.hpp>
 #include <components/c4001.hpp>
+#include "components/c4011.hpp"
+#include "components/c4030.hpp"
+#include "components/c4069.hpp"
 #include "ComponentFactory.hpp"
 
 nts::ComponentFactory::~ComponentFactory() {
@@ -21,6 +24,10 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["4008"] = std::bind(&ComponentFactory::create4008, this, std::placeholders::_1);
     mapPtr["4081"] = std::bind(&ComponentFactory::create4081, this, std::placeholders::_1);
     mapPtr["4001"] = std::bind(&ComponentFactory::create4001, this, std::placeholders::_1);
+    mapPtr["4011"] = std::bind(&ComponentFactory::create4011, this, std::placeholders::_1);
+    mapPtr["4030"] = std::bind(&ComponentFactory::create4030, this, std::placeholders::_1);
+    mapPtr["4069"] = std::bind(&ComponentFactory::create4069, this, std::placeholders::_1);
+
 }
 
 nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &value) {
@@ -70,4 +77,19 @@ nts::IComponent *nts::ComponentFactory::create4081(const std::string &value) con
 nts::IComponent *nts::ComponentFactory::create4001(const std::string &value) const {
     (void)value;
     return new c4001();
+}
+
+nts::IComponent *nts::ComponentFactory::create4011(const std::string &value) const {
+    (void)value;
+    return new c4011();
+}
+
+nts::IComponent *nts::ComponentFactory::create4030(const std::string &value) const {
+    (void)value;
+    return new c4030();
+}
+
+nts::IComponent *nts::ComponentFactory::create4069(const std::string &value) const {
+    (void)value;
+    return new c4069();
 }
