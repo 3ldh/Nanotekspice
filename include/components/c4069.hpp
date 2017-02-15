@@ -21,7 +21,7 @@ namespace nts
 
   public:
     virtual ~c4069();
-    c4069();
+    c4069(std::string const &name);
     void Dump(void) const override;
   };
 }

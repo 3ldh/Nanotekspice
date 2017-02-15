@@ -10,7 +10,7 @@
 
 #include "components/c4011.hpp"
 
-nts::c4011::c4011() : AComponent(14)
+nts::c4011::c4011(std::string const &name) : AComponent(name, 14)
 {
   // gate NAND 1
   pinComputeFunction[1] = std::bind(&c4011::computeInput, this, 1);

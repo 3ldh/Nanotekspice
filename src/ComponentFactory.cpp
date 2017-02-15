@@ -6,6 +6,7 @@
 #include <components/c4008.hpp>
 #include <components/c4081.hpp>
 #include <components/c4001.hpp>
+#include <components/c4071.hpp>
 #include "components/c4011.hpp"
 #include "components/c4030.hpp"
 #include "components/c4069.hpp"
@@ -24,6 +25,7 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["4008"] = std::bind(&ComponentFactory::create4008, this, std::placeholders::_1);
     mapPtr["4081"] = std::bind(&ComponentFactory::create4081, this, std::placeholders::_1);
     mapPtr["4001"] = std::bind(&ComponentFactory::create4001, this, std::placeholders::_1);
+    mapPtr["4071"] = std::bind(&ComponentFactory::create4071, this, std::placeholders::_1);
     mapPtr["4011"] = std::bind(&ComponentFactory::create4011, this, std::placeholders::_1);
     mapPtr["4030"] = std::bind(&ComponentFactory::create4030, this, std::placeholders::_1);
     mapPtr["4069"] = std::bind(&ComponentFactory::create4069, this, std::placeholders::_1);
@@ -65,31 +67,28 @@ nts::IComponent *nts::ComponentFactory::createTrue(const std::string &name) cons
 }
 
 nts::IComponent *nts::ComponentFactory::create4008(const std::string &value) const {
-    (void)value;
-    return new c4008();
+    return new c4008(value);
 }
 
 nts::IComponent *nts::ComponentFactory::create4081(const std::string &value) const {
-    (void)value;
-    return new c4081();
+    return new c4081(value);
 }
 
 nts::IComponent *nts::ComponentFactory::create4001(const std::string &value) const {
-    (void)value;
-    return new c4001();
+    return new c4001(value);
 }
 
+nts::IComponent *nts::ComponentFactory::create4071(const std::string &value) const {
+    return new c4071(value);
+}
 nts::IComponent *nts::ComponentFactory::create4011(const std::string &value) const {
-    (void)value;
-    return new c4011();
+    return new c4011(value);
 }
 
 nts::IComponent *nts::ComponentFactory::create4030(const std::string &value) const {
-    (void)value;
-    return new c4030();
+    return new c4030(value);
 }
 
 nts::IComponent *nts::ComponentFactory::create4069(const std::string &value) const {
-    (void)value;
-    return new c4069();
+    return new c4069(value);
 }

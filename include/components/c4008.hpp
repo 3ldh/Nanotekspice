@@ -16,7 +16,7 @@ namespace nts {
 
     public:
         virtual ~c4008();
-        c4008();
+        c4008(std::string const &name);
         void Dump(void) const;
     };
 }

@@ -8,7 +8,7 @@ nts::c4001::~c4001() {
 
 }
 
-nts::c4001::c4001() : AComponent(14) {
+nts::c4001::c4001(std::string const &name) : AComponent(name, 14) {
     //gate NOR 1
     pinComputeFunction[1] = std::bind(&c4001::computeInput, this, 1);
     pinComputeFunction[2] = std::bind(&c4001::computeInput, this, 2);

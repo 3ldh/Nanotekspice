@@ -10,7 +10,7 @@
 nts::AComponent::~AComponent() {
 }
 
-nts::AComponent::AComponent(int numberOfPin) : numberOfPin(numberOfPin) {
+nts::AComponent::AComponent(std::string const &name, int numberOfPin) : name(name), numberOfPin(numberOfPin) {
     for (int i = 1; i <= numberOfPin; ++i)
         pin[i] = NULL;
 }
@@ -54,7 +54,7 @@ nts::Tristate nts::AComponent::computeVSS(size_t pin_num_this) const {
 }
 
 void nts::AComponent::Dump(std::string const &str) const {
-    std::cout << str << std::endl;
+    std::cout << str << "<" << name << ">" << std::endl;
     for (size_t i = 1; i <= numberOfPin; ++i) {
         std::cout << "\tpin #" << i << " : " << ((pin.at(i)) ? std::to_string(pin.at(i)->Compute(link.at(i))) : "NULL")
                   << std::endl;

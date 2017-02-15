@@ -11,6 +11,7 @@
 
 namespace nts {
     class AComponent : public IComponent {
+        std::string name;
         int numberOfPin;
     protected:
         std::map<size_t, IComponent *> pin;
@@ -25,7 +26,7 @@ namespace nts {
 
     public:
         virtual ~AComponent();
-        AComponent(int numberOfPin);
+        AComponent(std::string const &name, int numberOfPin);
         void SetLink(size_t pin_num_this, nts::IComponent &component, size_t pin_num_target);
         Tristate Compute(size_t pin_num_this);
     };

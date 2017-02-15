@@ -369,13 +369,13 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
     ComponentFactory factory;
 
     if (node.type == ASTNodeType::COMPONENT) {
+
         IComponent *cmpnt = factory.createComponent((*node.children)[0]->value, (*node.children)[1]->value);
 
         circuit.getComponents().insert(std::make_pair((*node.children)[1]->value, cmpnt));
         //TODO uncomment when factory implement all components
-        /*if (!cmpnt)
+        if (!cmpnt)
             throw NtsError("Error : \"" + (*node.children)[0]->value + "\" is not a component");
-*/
         if ((*node.children)[0]->value == "output")
             circuit.getOutputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Output *>(cmpnt)));
         else if ((*node.children)[0]->value == "input") {
@@ -397,10 +397,18 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
         if (circuit.getComponents().find((*(*node.children)[1]->children)[0]->value) == circuit.getComponents().end())
             throw NtsError("Error link section : Can't find component named \"" +
                                    (*(*node.children)[1]->children)[0]->value + "\"");
+        if ((*(*node.children)[1]->children)[1])
+            std::cout << (*(*node.children)[1]->children)[1]->value << std::endl;
         circuit.getComponents()[(*(*node.children)[0]->children)[0]->value]->SetLink(
                 static_cast<size_t >(std::stoi((*(*node.children)[0]->children)[1]->value)),
                 *circuit.getComponents()[(*(*node.children)[1]->children)[0]->value],
-                static_cast<size_t >(std::stoi((*(*node.children)[1]->children)[1]->value)));
+                static_cast<size_t >(
+                        std::stoi(
+                                (*(*node.children)[1]
+                                        ->children)[1]
+                                        ->value)
+                )
+        );
     }
     if (node.children) {
         for (int i = 0; i < node.children->size(); ++i) {

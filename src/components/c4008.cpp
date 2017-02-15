@@ -10,7 +10,7 @@
 nts::c4008::~c4008() {
 }
 
-nts::c4008::c4008() : AComponent(16) {
+nts::c4008::c4008(std::string const &name) : AComponent(name, 16) {
 
     // A4 to A1
     pinComputeFunction[1] = std::bind(&c4008::computeInput, this, 1);

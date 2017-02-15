@@ -10,7 +10,7 @@
 
 #include "components/c4069.hpp"
 
-nts::c4069::c4069() : AComponent(14)
+nts::c4069::c4069(std::string const &name) : AComponent(name, 14)
 {
   // Invert Gate 1
   pinComputeFunction[1] = std::bind(&c4069::computeInput, this, 1);

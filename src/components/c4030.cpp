@@ -10,7 +10,7 @@
 
 #include "components/c4030.hpp"
 
-nts::c4030::c4030() : AComponent(14)
+nts::c4030::c4030(std::string const &name) : AComponent(name, 14)
 {
   // gate XOR 1
   pinComputeFunction[1] = std::bind(&c4030::computeInput, this, 1);

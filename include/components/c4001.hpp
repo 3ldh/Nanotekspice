@@ -13,10 +13,8 @@ namespace nts {
 
     public:
         virtual ~c4001();
-
-        void Dump(void) const override;
-
-        c4001();
+        void Dump(void) const;
+        c4001(std::string const &name);
     };
 }
 

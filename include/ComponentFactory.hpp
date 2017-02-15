@@ -25,6 +25,7 @@ namespace nts {
         IComponent *create4008(const std::string &value) const;
         IComponent *create4081(const std::string &value) const;
         IComponent *create4001(const std::string &value) const;
+        IComponent *create4071(const std::string &value) const;
         IComponent *create4011(const std::string &value) const;
         IComponent *create4030(const std::string &value) const;
         IComponent *create4069(const std::string &value) const;
