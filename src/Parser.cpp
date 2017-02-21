@@ -398,17 +398,11 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
             throw NtsError("Error link section : Can't find component named \"" +
                                    (*(*node.children)[1]->children)[0]->value + "\"");
         if ((*(*node.children)[1]->children)[1])
-            std::cout << (*(*node.children)[1]->children)[1]->value << std::endl;
         circuit.getComponents()[(*(*node.children)[0]->children)[0]->value]->SetLink(
                 static_cast<size_t >(std::stoi((*(*node.children)[0]->children)[1]->value)),
                 *circuit.getComponents()[(*(*node.children)[1]->children)[0]->value],
                 static_cast<size_t >(
-                        std::stoi(
-                                (*(*node.children)[1]
-                                        ->children)[1]
-                                        ->value)
-                )
-        );
+                        std::stoi((*(*node.children)[1]->children)[1]->value)));
     }
     if (node.children) {
         for (int i = 0; i < node.children->size(); ++i) {

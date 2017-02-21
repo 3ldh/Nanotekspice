@@ -70,6 +70,7 @@ void nts::Nanotekspice::loop() {
 
 void nts::Nanotekspice::simulate() {
     circuit->inverseClocks();
+    circuit->simulate();
 }
 
 

@@ -32,6 +32,7 @@ namespace nts {
         void updateInput(std::string const &inputName, std::string const &inputValue);
         void display();
         void dump();
+        void simulate();
         void inverseClocks();
 
         std::map<std::string, Input *> &getInputs();

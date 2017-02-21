@@ -44,3 +44,7 @@ void nts::ASpecialComponent::Dump(std::string const &componentType) const {
 void nts::ASpecialComponent::setName(const std::string &name) {
     ASpecialComponent::name = name;
 }
+
+nts::Tristate nts::ASpecialComponent::getValue() const {
+    return value;
+}

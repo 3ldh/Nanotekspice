@@ -21,7 +21,7 @@ namespace nts {
         virtual Tristate Compute(size_t pin_num_this);
         virtual void SetLink(size_t pin_num_this, nts::IComponent &component, size_t pin_num_target);
         void Dump(std::string const &componentType) const;
-
+        Tristate getValue() const;
         void setName(const std::string &name);
     };
 }

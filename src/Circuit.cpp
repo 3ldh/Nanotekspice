@@ -27,9 +27,9 @@ nts::Circuit::Circuit(const std::string &file,
             parser = new Parser(inputValue);
             while (std::getline(ifs, buffer))
                 parser->feed(buffer);
-            parser->dumpStream();
+//            parser->dumpStream();
             tree = parser->createTree();
-            dumpTree(tree);
+            // dumpTree(tree);
             parser->parseTree(*tree);
             parser->createComponents(*tree, *this);
         } catch (nts::NtsError const &err) {
@@ -62,10 +62,15 @@ void nts::Circuit::inverseClocks() {
         pair.second->inverse();
     });
 }
+void nts::Circuit::simulate() {
+    std::for_each(outputs.begin(), outputs.end(), [](std::pair<std::string, Output *> const &pair) {
+        pair.second->Compute(1);
+    });
+}
 
 void nts::Circuit::display() {
     std::for_each(outputs.begin(), outputs.end(), [](std::pair<std::string, Output *> const &pair) {
-        std::cout << pair.first << "=" << pair.second->Compute(1) << std::endl;
+        std::cout << pair.first << "=" << pair.second->getValue() << std::endl;
     });
 }
 
@@ -104,3 +109,4 @@ std::map<std::string, nts::False *> &nts::Circuit::getFalses() {
 std::map<std::string, nts::IComponent *> &nts::Circuit::getComponents() {
     return components;
 }
+
