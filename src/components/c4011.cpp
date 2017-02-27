@@ -46,7 +46,6 @@ nts::c4011::~c4011()
 
 nts::Tristate	nts::c4011::computeOutput(size_t pin_num_this) const
 {
-  Tristate	result;
   size_t	i1;
   size_t	i2;
 
@@ -54,8 +53,7 @@ nts::Tristate	nts::c4011::computeOutput(size_t pin_num_this) const
     return UNDEFINED;
   i1 = mapPinOutputs.at(pin_num_this).first;
   i2 = mapPinOutputs.at(pin_num_this).second;
-  result = static_cast<Tristate>(!(pin.at(i1)->Compute(link.at(i1)) && pin.at(i2)->Compute(link.at(i2))));
-  return result;
+  return tristate_nand(pin.at(i1)->Compute(link.at(i1)), pin.at(i2)->Compute(link.at(i2)));
 }
 
 void nts::c4011::Dump(void) const

@@ -60,3 +60,41 @@ void nts::AComponent::Dump(std::string const &str) const {
                   << std::endl;
     }
 }
+
+nts::Tristate nts::AComponent::tristate_and(Tristate a, Tristate b) const {
+    if (a == FALSE || b == FALSE)
+        return (FALSE);
+    if (a == TRUE && b == TRUE)
+        return (TRUE);
+    return (UNDEFINED);
+}
+
+nts::Tristate nts::AComponent::tristate_nand(nts::Tristate a, nts::Tristate b) const {
+    Tristate c = tristate_and(a, b);
+    if (c == UNDEFINED)
+        return (UNDEFINED);
+    return (static_cast<Tristate>(!c));
+}
+
+nts::Tristate nts::AComponent::tristate_or(nts::Tristate a, nts::Tristate b) const {
+    if (a == UNDEFINED || b == UNDEFINED)
+        return (UNDEFINED);
+    if (a == TRUE || b == TRUE)
+        return (TRUE);
+    return (FALSE);
+}
+
+nts::Tristate nts::AComponent::tristate_nor(nts::Tristate a, nts::Tristate b) const {
+    Tristate c = tristate_or(a, b);
+    if (c == UNDEFINED)
+        return (UNDEFINED);
+    return (static_cast<Tristate>(!c));
+}
+
+nts::Tristate nts::AComponent::tristate_xor(nts::Tristate a, nts::Tristate b) const {
+    if (a == UNDEFINED && b == UNDEFINED)
+        return (UNDEFINED);
+    if (a == TRUE && b == TRUE)
+        return (FALSE);
+    return (tristate_or(a, b));
+}

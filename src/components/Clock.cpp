@@ -16,5 +16,6 @@ void nts::Clock::Dump(void) const {
 }
 
 void nts::Clock::inverse() {
-    value = (value == FALSE) ? TRUE : FALSE;
+    if (value != UNDEFINED)
+        value = (value == FALSE) ? TRUE : FALSE;
 }

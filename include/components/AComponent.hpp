@@ -23,6 +23,11 @@ namespace nts {
         virtual Tristate computeVDD(size_t pin_num_this) const;
         virtual Tristate computeVSS(size_t pin_num_this) const;
         void Dump(std::string const& str) const;
+        Tristate tristate_and(Tristate a, Tristate b) const;
+        Tristate tristate_nand(Tristate a, Tristate b) const;
+        Tristate tristate_or(Tristate a, Tristate b) const;
+        Tristate tristate_xor(Tristate a, Tristate b) const;
+        Tristate tristate_nor(Tristate a, Tristate b) const;
 
     public:
         virtual ~AComponent();

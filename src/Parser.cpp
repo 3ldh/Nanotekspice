@@ -380,33 +380,35 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
             circuit.getOutputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Output *>(cmpnt)));
         else if ((*node.children)[0]->value == "input") {
             circuit.getInputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Input *>(cmpnt)));
-            if (inputValue.find((*node.children)[1]->value) == inputValue.end())
+           /* if (inputValue.find((*node.children)[1]->value) == inputValue.end())
                 throw NtsError("Error : Input value for \"" + (*node.children)[1]->value +"\" is not initalized");
-            dynamic_cast<Input *>(cmpnt)->setValue(static_cast<Tristate>(std::stoi(inputValue[(*node.children)[1]->value])));
-        }
-        else if ((*node.children)[0]->value == "clock")
-            circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
-        else if ((*node.children)[0]->value == "false")
-            circuit.getFalses().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<False *>(cmpnt)));
-        else if ((*node.children)[0]->value == "true")
-            circuit.getTrues().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<True *>(cmpnt)));
-    } else if (node.type == ASTNodeType::LINK) {
-        if (circuit.getComponents().find((*(*node.children)[0]->children)[0]->value) == circuit.getComponents().end())
-            throw NtsError("Error link section : Can't find component named \"" +
-                                   (*(*node.children)[0]->children)[0]->value + "\"");
-        if (circuit.getComponents().find((*(*node.children)[1]->children)[0]->value) == circuit.getComponents().end())
-            throw NtsError("Error link section : Can't find component named \"" +
-                                   (*(*node.children)[1]->children)[0]->value + "\"");
-        if ((*(*node.children)[1]->children)[1])
-        circuit.getComponents()[(*(*node.children)[0]->children)[0]->value]->SetLink(
-                static_cast<size_t >(std::stoi((*(*node.children)[0]->children)[1]->value)),
-                *circuit.getComponents()[(*(*node.children)[1]->children)[0]->value],
-                static_cast<size_t >(
-                        std::stoi((*(*node.children)[1]->children)[1]->value)));
-    }
-    if (node.children) {
-        for (int i = 0; i < node.children->size(); ++i) {
-            createComponents(*(*node.children)[i], circuit);
-        }
-    }
-}
+*/
+            if (inputValue.find((*node.children)[1]->value) != inputValue.end())
+             dynamic_cast<Input *>(cmpnt)->setValue(static_cast<Tristate>(std::stoi(inputValue[(*node.children)[1]->value])));
+         }
+         else if ((*node.children)[0]->value == "clock")
+             circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
+         else if ((*node.children)[0]->value == "false")
+             circuit.getFalses().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<False *>(cmpnt)));
+         else if ((*node.children)[0]->value == "true")
+             circuit.getTrues().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<True *>(cmpnt)));
+     } else if (node.type == ASTNodeType::LINK) {
+         if (circuit.getComponents().find((*(*node.children)[0]->children)[0]->value) == circuit.getComponents().end())
+             throw NtsError("Error link section : Can't find component named \"" +
+                                    (*(*node.children)[0]->children)[0]->value + "\"");
+         if (circuit.getComponents().find((*(*node.children)[1]->children)[0]->value) == circuit.getComponents().end())
+             throw NtsError("Error link section : Can't find component named \"" +
+                                    (*(*node.children)[1]->children)[0]->value + "\"");
+         if ((*(*node.children)[1]->children)[1])
+         circuit.getComponents()[(*(*node.children)[0]->children)[0]->value]->SetLink(
+                 static_cast<size_t >(std::stoi((*(*node.children)[0]->children)[1]->value)),
+                 *circuit.getComponents()[(*(*node.children)[1]->children)[0]->value],
+                 static_cast<size_t >(
+                         std::stoi((*(*node.children)[1]->children)[1]->value)));
+     }
+     if (node.children) {
+         for (int i = 0; i < node.children->size(); ++i) {
+             createComponents(*(*node.children)[i], circuit);
+         }
+     }
+ }

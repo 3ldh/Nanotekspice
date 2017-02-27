@@ -46,7 +46,7 @@ void nts::c4008::Dump(void) const {
     AComponent::Dump("Chipset 4008 : ");
 }
 
-nts::Tristate nts::c4008::computeOuputOrCarryOut(size_t pin_num_this, bool computeCarry = false) const {
+nts::Tristate nts::c4008::computeOutputOrCarryOut(size_t pin_num_this, bool computeCarry = false) const {
     Tristate result = UNDEFINED;
     Tristate carry = FALSE;
 
@@ -71,10 +71,10 @@ nts::Tristate nts::c4008::computeOuputOrCarryOut(size_t pin_num_this, bool compu
 }
 
 nts::Tristate nts::c4008::computeOutput(size_t pin_num_this) const {
-    return computeOuputOrCarryOut(pin_num_this);
+    return computeOutputOrCarryOut(pin_num_this);
 }
 
 nts::Tristate nts::c4008::computeCarryOut(size_t pin_num_this) const {
-    return computeOuputOrCarryOut(pin_num_this, true);
+    return computeOutputOrCarryOut(pin_num_this, true);
 }
 

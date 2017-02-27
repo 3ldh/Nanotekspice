@@ -37,7 +37,7 @@ void nts::ASpecialComponent::SetLink(size_t pin_num_this, nts::IComponent &compo
 }
 
 void nts::ASpecialComponent::Dump(std::string const &componentType) const {
-    std::cout << "Component - "<< componentType << "<" + name + "> : " << value << std::endl;
+    std::cout << "Component - " << componentType << "<" + name + "> : " << value << std::endl;
     std::cout << "\tpin #1: " << ((pin[0]) ? "linked" : "NULL") << std::endl;
 }
 
