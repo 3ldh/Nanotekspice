@@ -9,7 +9,7 @@
 
 namespace nts {
     class c4071 : public AComponent{
-        Tristate computeOutput(size_t pin_num_this) const override;
+        Tristate output(size_t pin_num_this);
     public:
         c4071(std::string const &name);
         virtual ~c4071();

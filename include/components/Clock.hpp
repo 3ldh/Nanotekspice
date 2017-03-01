@@ -9,12 +9,16 @@
 
 namespace nts {
     class Clock : public ASpecialComponent {
+        Tristate prevValue;
+        Tristate lowToHigh;
     public:
         virtual ~Clock();
         Clock(std::string const &name);
         void Dump(void) const;
         void inverse();
-    };
+        Tristate isLowToHigh() const;
+        void setValue(nts::Tristate value);
+        };
 }
 
 #endif //CPP_NANOTEKSPICE_CLOCK_HPP

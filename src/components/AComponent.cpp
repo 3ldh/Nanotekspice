@@ -21,7 +21,7 @@ nts::Tristate nts::AComponent::Compute(size_t pin_num_this) {
     return pinComputeFunction[pin_num_this](pin_num_this);
 }
 
-nts::Tristate nts::AComponent::computeInput(size_t pin_num_this) const {
+nts::Tristate nts::AComponent::input(size_t pin_num_this) const {
     if (!pin.at(pin_num_this))
         return UNDEFINED;
     if (dynamic_cast<Output *>(pin.at(pin_num_this)))
@@ -41,15 +41,13 @@ void nts::AComponent::SetLink(size_t pin_num_this, nts::IComponent &component, s
     }
 }
 
-nts::Tristate nts::AComponent::computeVDD(size_t pin_num_this) const {
+nts::Tristate nts::AComponent::vdd(size_t pin_num_this) const {
     (void) pin_num_this;
-    std::cerr << "Computing VDD result to an UNDEFINED state" << std::endl;
     return UNDEFINED;
 }
 
-nts::Tristate nts::AComponent::computeVSS(size_t pin_num_this) const {
+nts::Tristate nts::AComponent::vss(size_t pin_num_this) const {
     (void) pin_num_this;
-    std::cerr << "Computing VSS result to an UNDEFINED state" << std::endl;
     return UNDEFINED;
 }
 

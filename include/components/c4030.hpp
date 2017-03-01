@@ -17,12 +17,12 @@ namespace nts
 {
   class c4030 : public AComponent
   {
-    Tristate computeOutput(size_t pin_num_this) const;
+    Tristate output(size_t pin_num_this);
 
   public:
     virtual ~c4030();
     c4030(std::string const &name);
-    void Dump(void) const override;
+    void Dump(void) const;
   };
 }
 

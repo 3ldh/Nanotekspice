@@ -10,9 +10,9 @@
 namespace nts {
     class c4008 : public AComponent {
 
-        Tristate computeOutputOrCarryOut(size_t pin_num_this, bool computeCarry) const;
-        Tristate computeCarryOut(size_t pin_num_this) const;
-        Tristate computeOutput(size_t pin_num_this) const;
+        Tristate outputOrCarryOut(size_t pin_num_this, bool computeCarry) const;
+        Tristate carryOut(size_t pin_num_this) const;
+        Tristate output(size_t pin_num_this);
 
     public:
         virtual ~c4008();

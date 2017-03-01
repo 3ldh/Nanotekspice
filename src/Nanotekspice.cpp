@@ -42,7 +42,7 @@ void nts::Nanotekspice::mainLoop() {
     signal(SIGINT, cancelCancel);
     simulate();
     display();
-    std::cout << ">";
+    std::cout << "> ";
     while (mainLooper && std::getline(std::cin, cmd)) {
         cmd = cleanCommand(cmd);
         if (commmands.find(cmd) != commmands.end())
@@ -67,12 +67,12 @@ void nts::Nanotekspice::loop() {
     signal(SIGINT, cancelCancel);
 }
 
-
 void nts::Nanotekspice::simulate() {
-    circuit->inverseClocks();
-    circuit->simulate();
+    if (circuit) {
+        circuit->inverseClocks();
+        circuit->simulate();
+    }
 }
-
 
 void nts::Nanotekspice::display() {
     if (circuit)

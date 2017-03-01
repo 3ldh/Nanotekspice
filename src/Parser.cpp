@@ -260,7 +260,7 @@ void nts::Parser::checkComponentIntegrity(nts::t_ast_node const &node, nts::t_as
     if (node.type == ASTNodeType::COMPONENT) {
         if (node.children->size() != 3 || (*node.children)[0]->type != ASTNodeType::STRING
             || (*node.children)[1]->type != ASTNodeType::STRING || (*node.children)[2]->type != ASTNodeType::NEWLINE) {
-            throw NtsError("Error : Component integrity compromised check your file.nts."
+            throw NtsError("Error : Component integrity compromised check your file.nts. "
                                    "Chipset section Syntax : [componentType] [spaces] [componentName] [newLine]");
         }
         if ((*node.children)[0]->value == "output") {
@@ -373,21 +373,24 @@ void nts::Parser::createComponents(t_ast_node const &node, Circuit &circuit) {
         IComponent *cmpnt = factory.createComponent((*node.children)[0]->value, (*node.children)[1]->value);
 
         circuit.getComponents().insert(std::make_pair((*node.children)[1]->value, cmpnt));
-        //TODO uncomment when factory implement all components
         if (!cmpnt)
             throw NtsError("Error : \"" + (*node.children)[0]->value + "\" is not a component");
         if ((*node.children)[0]->value == "output")
             circuit.getOutputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Output *>(cmpnt)));
         else if ((*node.children)[0]->value == "input") {
             circuit.getInputs().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Input *>(cmpnt)));
-           /* if (inputValue.find((*node.children)[1]->value) == inputValue.end())
+            if (inputValue.find((*node.children)[1]->value) == inputValue.end())
                 throw NtsError("Error : Input value for \"" + (*node.children)[1]->value +"\" is not initalized");
-*/
             if (inputValue.find((*node.children)[1]->value) != inputValue.end())
              dynamic_cast<Input *>(cmpnt)->setValue(static_cast<Tristate>(std::stoi(inputValue[(*node.children)[1]->value])));
          }
-         else if ((*node.children)[0]->value == "clock")
-             circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
+         else if ((*node.children)[0]->value == "clock") {
+            circuit.getClocks().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<Clock *>(cmpnt)));
+            if (inputValue.find((*node.children)[1]->value) == inputValue.end())
+                throw NtsError("Error : Clock value for \"" + (*node.children)[1]->value +"\" is not initalized");
+            if (inputValue.find((*node.children)[1]->value) != inputValue.end())
+                dynamic_cast<Clock *>(cmpnt)->setValue(static_cast<Tristate>(std::stoi(inputValue[(*node.children)[1]->value])));
+        }
          else if ((*node.children)[0]->value == "false")
              circuit.getFalses().insert(std::make_pair((*node.children)[1]->value, dynamic_cast<False *>(cmpnt)));
          else if ((*node.children)[0]->value == "true")

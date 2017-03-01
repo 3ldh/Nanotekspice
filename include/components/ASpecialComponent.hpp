@@ -6,6 +6,7 @@
 #define CPP_NANOTEKSPICE_TRUE_HPP
 
 #include <IComponent.hpp>
+#include <string>
 
 namespace nts {
     class ASpecialComponent : public IComponent {

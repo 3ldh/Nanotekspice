@@ -10,25 +10,25 @@ nts::c4071::~c4071() {
 
 nts::c4071::c4071(std::string const &name) : AComponent(name, 14) {
     //gate OR 1
-    pinComputeFunction[1] = std::bind(&c4071::computeInput, this, 1);
-    pinComputeFunction[2] = std::bind(&c4071::computeInput, this, 2);
-    pinComputeFunction[3] = std::bind(&c4071::computeOutput, this, 3);
+    pinComputeFunction[1] = std::bind(&c4071::input, this, 1);
+    pinComputeFunction[2] = std::bind(&c4071::input, this, 2);
+    pinComputeFunction[3] = std::bind(&c4071::output, this, 3);
     //gate OR 2
-    pinComputeFunction[5] = std::bind(&c4071::computeInput, this, 5);
-    pinComputeFunction[6] = std::bind(&c4071::computeInput, this, 6);
-    pinComputeFunction[4] = std::bind(&c4071::computeOutput, this, 4);
+    pinComputeFunction[5] = std::bind(&c4071::input, this, 5);
+    pinComputeFunction[6] = std::bind(&c4071::input, this, 6);
+    pinComputeFunction[4] = std::bind(&c4071::output, this, 4);
     //gate OR 3
-    pinComputeFunction[8] = std::bind(&c4071::computeInput, this, 8);
-    pinComputeFunction[9] = std::bind(&c4071::computeInput, this, 9);
-    pinComputeFunction[10] = std::bind(&c4071::computeOutput, this, 10);
+    pinComputeFunction[8] = std::bind(&c4071::input, this, 8);
+    pinComputeFunction[9] = std::bind(&c4071::input, this, 9);
+    pinComputeFunction[10] = std::bind(&c4071::output, this, 10);
     //gate OR 4
-    pinComputeFunction[12] = std::bind(&c4071::computeInput, this, 12);
-    pinComputeFunction[13] = std::bind(&c4071::computeInput, this, 13);
-    pinComputeFunction[11] = std::bind(&c4071::computeOutput, this, 11);
+    pinComputeFunction[12] = std::bind(&c4071::input, this, 12);
+    pinComputeFunction[13] = std::bind(&c4071::input, this, 13);
+    pinComputeFunction[11] = std::bind(&c4071::output, this, 11);
     //VSS
-    pinComputeFunction[7] = std::bind(&c4071::computeVSS, this, 7);
+    pinComputeFunction[7] = std::bind(&c4071::vss, this, 7);
     //VDD
-    pinComputeFunction[14] = std::bind(&c4071::computeVDD, this, 14);
+    pinComputeFunction[14] = std::bind(&c4071::vdd, this, 14);
     //link output with inputs
     mapPinOutputs[3] = std::make_pair(1, 2);
     mapPinOutputs[4] = std::make_pair(5, 6);
@@ -36,7 +36,7 @@ nts::c4071::c4071(std::string const &name) : AComponent(name, 14) {
     mapPinOutputs[11] = std::make_pair(12, 13);
 }
 
-nts::Tristate nts::c4071::computeOutput(size_t pin_num_this) const {
+nts::Tristate nts::c4071::output(size_t pin_num_this) {
     Tristate result;
     size_t i1;
     size_t i2;

@@ -17,7 +17,7 @@ namespace nts
 {
   class	c4011 : public AComponent
   {
-    Tristate computeOutput(size_t pin_num_this) const;
+    Tristate output(size_t pin_num_this);
 
   public:
     virtual ~c4011();

@@ -22,19 +22,15 @@ nts::Circuit::Circuit(const std::string &file,
     std::ifstream ifs;
     ifs.open(file.c_str());
     if (ifs.is_open()) {
-        try {
-            std::string buffer;
-            parser = new Parser(inputValue);
-            while (std::getline(ifs, buffer))
-                parser->feed(buffer);
+        std::string buffer;
+        parser = new Parser(inputValue);
+        while (std::getline(ifs, buffer))
+            parser->feed(buffer);
 //            parser->dumpStream();
-            tree = parser->createTree();
-            // dumpTree(tree);
-            parser->parseTree(*tree);
-            parser->createComponents(*tree, *this);
-        } catch (nts::NtsError const &err) {
-            throw err;
-        }
+        tree = parser->createTree();
+        // dumpTree(tree);
+        parser->parseTree(*tree);
+        parser->createComponents(*tree, *this);
         ifs.close();
     } else
         throw nts::FileError("FileError : Can't open file : " + file);
@@ -62,6 +58,7 @@ void nts::Circuit::inverseClocks() {
         pair.second->inverse();
     });
 }
+
 void nts::Circuit::simulate() {
     std::for_each(outputs.begin(), outputs.end(), [](std::pair<std::string, Output *> const &pair) {
         pair.second->Compute(1);

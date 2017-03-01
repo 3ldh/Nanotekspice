@@ -13,28 +13,28 @@ nts::c4008::~c4008() {
 nts::c4008::c4008(std::string const &name) : AComponent(name, 16) {
 
     // A4 to A1
-    pinComputeFunction[1] = std::bind(&c4008::computeInput, this, 1);
-    pinComputeFunction[3] = std::bind(&c4008::computeInput, this, 3);
-    pinComputeFunction[5] = std::bind(&c4008::computeInput, this, 5);
-    pinComputeFunction[7] = std::bind(&c4008::computeInput, this, 7);
+    pinComputeFunction[1] = std::bind(&c4008::input, this, 1);
+    pinComputeFunction[3] = std::bind(&c4008::input, this, 3);
+    pinComputeFunction[5] = std::bind(&c4008::input, this, 5);
+    pinComputeFunction[7] = std::bind(&c4008::input, this, 7);
     // B4 to B1
-    pinComputeFunction[15] = std::bind(&c4008::computeInput, this, 15);
-    pinComputeFunction[6] = std::bind(&c4008::computeInput, this, 7);
-    pinComputeFunction[4] = std::bind(&c4008::computeInput, this, 4);
-    pinComputeFunction[2] = std::bind(&c4008::computeInput, this, 2);
+    pinComputeFunction[15] = std::bind(&c4008::input, this, 15);
+    pinComputeFunction[6] = std::bind(&c4008::input, this, 7);
+    pinComputeFunction[4] = std::bind(&c4008::input, this, 4);
+    pinComputeFunction[2] = std::bind(&c4008::input, this, 2);
     //CarryIn
-    pinComputeFunction[9] = std::bind(&c4008::computeInput, this, 9);
-    //CarryOut
-    pinComputeFunction[14] = std::bind(&c4008::computeCarryOut, this, 14);
+    pinComputeFunction[9] = std::bind(&c4008::input, this, 9);
+    //carryOut
+    pinComputeFunction[14] = std::bind(&c4008::carryOut, this, 14);
     //VDD
-    pinComputeFunction[16] = std::bind(&c4008::computeVDD, this, 16);
+    pinComputeFunction[16] = std::bind(&c4008::vdd, this, 16);
     //VSS
-    pinComputeFunction[8] = std::bind(&c4008::computeVSS, this, 8);
+    pinComputeFunction[8] = std::bind(&c4008::vss, this, 8);
     //Sum s1 to s4
-    pinComputeFunction[10] = std::bind(&c4008::computeOutput, this, 10);
-    pinComputeFunction[11] = std::bind(&c4008::computeOutput, this, 11);
-    pinComputeFunction[12] = std::bind(&c4008::computeOutput, this, 12);
-    pinComputeFunction[13] = std::bind(&c4008::computeOutput, this, 13);
+    pinComputeFunction[10] = std::bind(&c4008::output, this, 10);
+    pinComputeFunction[11] = std::bind(&c4008::output, this, 11);
+    pinComputeFunction[12] = std::bind(&c4008::output, this, 12);
+    pinComputeFunction[13] = std::bind(&c4008::output, this, 13);
     //output link with inputs
     mapPinOutputs[10] = std::make_pair(6, 7);
     mapPinOutputs[11] = std::make_pair(4, 5);
@@ -46,7 +46,7 @@ void nts::c4008::Dump(void) const {
     AComponent::Dump("Chipset 4008 : ");
 }
 
-nts::Tristate nts::c4008::computeOutputOrCarryOut(size_t pin_num_this, bool computeCarry = false) const {
+nts::Tristate nts::c4008::outputOrCarryOut(size_t pin_num_this, bool computeCarry = false) const {
     Tristate result = UNDEFINED;
     Tristate carry = FALSE;
 
@@ -58,11 +58,12 @@ nts::Tristate nts::c4008::computeOutputOrCarryOut(size_t pin_num_this, bool comp
         if (mapPinOutputs.find(i) != mapPinOutputs.end()) {
             size_t i1 = mapPinOutputs.at(i).first;
             size_t i2 = mapPinOutputs.at(i).second;
-            int tmp = static_cast<int>(pin.at(i1)->Compute(link.at(i1))) +
-                      static_cast<int>(pin.at(i2)->Compute(link.at(i2))) +
-                      static_cast<int>(carry);
-            carry = static_cast<Tristate>(tmp >> 1);
-            result = static_cast<Tristate>(tmp & 1);
+            Tristate a, b, tmp;
+            pin.at(i1) ? a = pin.at(i1)->Compute(link.at(i1)) : a = UNDEFINED;
+            pin.at(i2) ? b = pin.at(i2)->Compute(link.at(i2)) : b = UNDEFINED;
+            tmp = tristate_xor(a, b);
+            result = tristate_xor(tmp, carry);
+            carry = tristate_or(tristate_and(a, b), tristate_and(tmp, carry));
         }
     }
     if (computeCarry)
@@ -70,11 +71,11 @@ nts::Tristate nts::c4008::computeOutputOrCarryOut(size_t pin_num_this, bool comp
     return result;
 }
 
-nts::Tristate nts::c4008::computeOutput(size_t pin_num_this) const {
-    return computeOutputOrCarryOut(pin_num_this);
+nts::Tristate nts::c4008::output(size_t pin_num_this) {
+    return outputOrCarryOut(pin_num_this);
 }
 
-nts::Tristate nts::c4008::computeCarryOut(size_t pin_num_this) const {
-    return computeOutputOrCarryOut(pin_num_this, true);
+nts::Tristate nts::c4008::carryOut(size_t pin_num_this) const {
+    return outputOrCarryOut(pin_num_this, true);
 }
 

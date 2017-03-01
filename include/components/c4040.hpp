@@ -10,7 +10,7 @@
 namespace nts {
     class c4040 : public AComponent {
     protected:
-        Tristate computeOutput(size_t pin_num_this) const;
+        Tristate output(size_t pin_num_this);
     public:
         c4040(const std::string &name);
         virtual ~c4040();
