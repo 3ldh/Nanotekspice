@@ -89,11 +89,10 @@ nts::Tristate nts::c4514::output(size_t pin_num_this) {
 
     if (linkSToPin.find(pin_num_this) == linkSToPin.end())
         return UNDEFINED;
-    if (Compute(1) == 0) {
-        value[linkSToPin[pin_num_this]] = FALSE;
+    if (Compute(1) == 0)
         return value[linkSToPin[pin_num_this]];
-    }
     if (Compute(23) == 1) {
+        value[linkSToPin[pin_num_this]] = FALSE;
         return value[linkSToPin[pin_num_this]];
     }
 
