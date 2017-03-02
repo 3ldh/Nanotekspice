@@ -49,7 +49,7 @@ MAIN =	src/main.cpp
 OBJMAIN =	$(MAIN:.cpp=.o)
 
 $(NAME): $(OBJ) $(OBJMAIN)
-	 ar rv $(LIB) $(OBJ)
+	 ar rc $(LIB) $(OBJ)
 	 ranlib $(LIB)
 	 $(CC) $(OBJMAIN) $(CCL) -o $(NAME)
 
