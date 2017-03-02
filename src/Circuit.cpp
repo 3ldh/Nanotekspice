@@ -28,7 +28,7 @@ nts::Circuit::Circuit(const std::string &file,
             parser->feed(buffer);
 //            parser->dumpStream();
         tree = parser->createTree();
-        // dumpTree(tree);
+       // dumpTree(tree);
         parser->parseTree(*tree);
         parser->createComponents(*tree, *this);
         ifs.close();
