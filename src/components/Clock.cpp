@@ -24,9 +24,11 @@ void nts::Clock::inverse() {
     if (value != UNDEFINED) {
         prevValue = value;
         value = (value == FALSE) ? TRUE : FALSE;
-        if ((prevValue == FALSE || prevValue == UNDEFINED) && value == TRUE)
+        if (prevValue == UNDEFINED || value == UNDEFINED)
+            lowToHigh = UNDEFINED;
+        if (prevValue == FALSE && value == TRUE)
             lowToHigh = TRUE;
-        else if ((prevValue == TRUE || prevValue == UNDEFINED) && value == FALSE)
+        else if (prevValue == TRUE && value == FALSE)
             lowToHigh = FALSE;
     }
 }

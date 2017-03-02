@@ -26,9 +26,9 @@ nts::Circuit::Circuit(const std::string &file,
         parser = new Parser(inputValue);
         while (std::getline(ifs, buffer))
             parser->feed(buffer);
-//            parser->dumpStream();
+        //parser->dumpStream();
         tree = parser->createTree();
-       // dumpTree(tree);
+        //dumpTree(tree);
         parser->parseTree(*tree);
         parser->createComponents(*tree, *this);
         ifs.close();

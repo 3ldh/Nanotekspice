@@ -69,8 +69,8 @@ void nts::Nanotekspice::loop() {
 
 void nts::Nanotekspice::simulate() {
     if (circuit) {
-        circuit->inverseClocks();
         circuit->simulate();
+        circuit->inverseClocks();
     }
 }
 
