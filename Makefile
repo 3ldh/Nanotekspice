@@ -1,9 +1,9 @@
 ##
 ## Makefile for Makefile in /home/blanch_p/rendu/Semestre3/CPP/cpp_nanotekspice
-## 
+##
 ## Made by Alexandre BLANCHARD
 ## Login   <blanch_p@epitech.net>
-## 
+##
 ## Started on  Thu Feb  9 16:13:41 2017 Alexandre BLANCHARD
 ## Last update Thu Mar  2 13:04:34 2017 Alexandre BLANCHARD
 ##
@@ -18,7 +18,7 @@ CCL =	-L./ -lnanotekspice
 
 COMP =	src/components/
 
-CPPFLAGS =	-Iinclude -g
+CPPFLAGS =	-Iinclude
 
 SRC =	src/Circuit.cpp			\
 	src/ComponentFactory.cpp	\
@@ -50,6 +50,7 @@ OBJMAIN =	$(MAIN:.cpp=.o)
 
 $(NAME): $(OBJ) $(OBJMAIN)
 	 ar rv $(LIB) $(OBJ)
+	 ranlib $(LIB)
 	 $(CC) $(OBJMAIN) $(CCL) -o $(NAME)
 
 all: $(NAME)

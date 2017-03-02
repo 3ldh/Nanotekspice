@@ -25,7 +25,7 @@ nts::Tristate nts::AComponent::input(size_t pin_num_this) const {
     if (!pin.at(pin_num_this))
         return UNDEFINED;
     if (dynamic_cast<Output *>(pin.at(pin_num_this)))
-        throw PinError("PinError : Invalid use of Output as Input");
+        throw PinError("PinError : Output used as Input");
     return pin.at(pin_num_this)->Compute(link.at(pin_num_this));
 }
 
