@@ -67,7 +67,10 @@ void nts::Circuit::simulate() {
 
 void nts::Circuit::display() {
     std::for_each(outputs.begin(), outputs.end(), [](std::pair<std::string, Output *> const &pair) {
-        std::cout << pair.first << "=" << pair.second->getValue() << std::endl;
+	if (pair.second->getValue() == -1)
+	  std::cout << pair.first << "=U" << std::endl;
+	else
+	  std::cout << pair.first << "=" << pair.second->getValue() << std::endl;
     });
 }
 
@@ -106,4 +109,3 @@ std::map<std::string, nts::False *> &nts::Circuit::getFalses() {
 std::map<std::string, nts::IComponent *> &nts::Circuit::getComponents() {
     return components;
 }
-
