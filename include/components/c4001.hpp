@@ -10,7 +10,6 @@
 namespace nts {
     class c4001 : public AComponent{
         Tristate output(size_t pin_num_this);
-
     public:
         virtual ~c4001();
         void Dump(void) const;

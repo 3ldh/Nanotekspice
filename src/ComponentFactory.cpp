@@ -8,6 +8,7 @@
 #include <components/c4001.hpp>
 #include <components/c4071.hpp>
 #include <components/c4013.hpp>
+#include <components/c4514.hpp>
 #include "components/c4011.hpp"
 #include "components/c4030.hpp"
 #include "components/c4069.hpp"
@@ -31,6 +32,7 @@ nts::ComponentFactory::ComponentFactory() {
     mapPtr["4030"] = std::bind(&ComponentFactory::create4030, this, std::placeholders::_1);
     mapPtr["4069"] = std::bind(&ComponentFactory::create4069, this, std::placeholders::_1);
     mapPtr["4013"] = std::bind(&ComponentFactory::create4013, this, std::placeholders::_1);
+    mapPtr["4514"] = std::bind(&ComponentFactory::create4514, this, std::placeholders::_1);
 }
 
 nts::Tristate nts::ComponentFactory::convertStringToTristate(std::string const &value) {
@@ -96,4 +98,8 @@ nts::IComponent *nts::ComponentFactory::create4069(const std::string &value) con
 
 nts::IComponent *nts::ComponentFactory::create4013(const std::string &value) const {
     return new c4013(value);
+}
+
+nts::IComponent *nts::ComponentFactory::create4514(const std::string &value) const {
+    return new c4514(value);
 }
