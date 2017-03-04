@@ -41,13 +41,6 @@ nts::c4069::c4069(std::string const &name) : AComponent(name, 14) {
     mapPinOutputs[8] = std::make_pair(9, 9);
     mapPinOutputs[10] = std::make_pair(11, 11);
     mapPinOutputs[12] = std::make_pair(13, 13);
-
-    // mapPinOutputs[2] = 1;
-    // mapPinOutputs[4] = 3;
-    // mapPinOutputs[6] = 5;
-    // mapPinOutputs[8] = 9;
-    // mapPinOutputs[10] = 11;
-    // mapPinOutputs[12] = 13;
 }
 
 nts::c4069::~c4069() {

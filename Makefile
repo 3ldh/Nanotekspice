@@ -5,7 +5,7 @@
 ## Login   <blanch_p@epitech.net>
 ##
 ## Started on  Thu Feb  9 16:13:41 2017 Alexandre BLANCHARD
-## Last update Thu Mar  2 13:04:34 2017 Alexandre BLANCHARD
+## Last update Sat Mar  4 17:49:26 2017 Sauvau Mathieu
 ##
 
 NAME =	nanotekspice
@@ -36,6 +36,7 @@ SRC =	src/Circuit.cpp			\
 	$(COMP)c4069.cpp		\
 	$(COMP)c4071.cpp		\
 	$(COMP)c4081.cpp		\
+	$(COMP)c4514.cpp		\
 	$(COMP)Clock.cpp		\
 	$(COMP)False.cpp		\
 	$(COMP)Input.cpp		\
